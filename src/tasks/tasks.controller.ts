@@ -10,6 +10,11 @@ import { Task } from './task.entity';
 export class TasksController {
     constructor(private tasksService: TasksService) {}
 
+    @Get()
+    getTasks(@Query() filterDto: GetTasksFilterDto): Promise<Task[]> {
+        return this.tasksService.getTasks(filterDto)
+    }
+
     @Get('/:id')
     getTaskById(@Param('id') id: string): Promise<Task> {
         return this.tasksService.getTaskById(id)
@@ -22,48 +27,20 @@ export class TasksController {
     }
 
     @Delete('/:id')
-    deleteTaskById(@Param('id') id: string): Promise<Task> {
+    deleteTaskById(@Param('id') id: string): Promise<void> {
         return this.tasksService.deleteTaskById(id)
     }
 
-    // @Get()
-    // getTasks(@Query() filterDto: GetTasksFilterDto): Task[] {
-    //     if (Object.keys(filterDto).length) {
-    //         return this.tasksService.getTasksWithFilters(filterDto)
-    //     }
+    @Patch(':id/status')
+    updateTaskStatus(
+        @Param('id') id: string,
+        @Body('status') status: TaskStatus 
+    ): Promise<Task> {
+        const updateTaskStatusDto: UpdateTaskStatusDto = {
+            id: id,
+            status: status,
+        }
 
-    //     return this.tasksService.getAllTasks()
-    // }
-
-    // @Get('/:id')
-    // getTaskById(@Param('id') id: string): Task {
-    //     const task: Task = this.tasksService.getTaskById(id)
-    //     return task
-    // }
-
-    // @Post()
-    // createTask(@Body() createTaskDto: CreateTaskDto): Task {
-    //     const task: Task = this.tasksService.createTask(createTaskDto)
-    //     return task
-    // }
-
-    // @Delete('/:id')
-    // deleteTaskById(@Param('id') id: string): Task[] {
-    //     const tasks: Task[] = this.tasksService.deleteTaskById(id)
-    //     return tasks
-    // }
-
-    // @Patch(':id/status')
-    // updateTaskStatus(
-    //     @Param('id') id: string,
-    //     @Body('status') status: TaskStatus 
-    // ): Task {
-    //     const updateTaskStatusDto: UpdateTaskStatusDto = {
-    //         id: id,
-    //         status: status,
-    //     }
-
-    //     const task: Task = this.tasksService.updateTaskStatus(updateTaskStatusDto)
-    //     return task
-    // }
+        return this.tasksService.updateTaskStatus(updateTaskStatusDto)
+    }
 }
