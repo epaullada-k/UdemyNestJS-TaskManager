@@ -1,5 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
-import { Task } from './task.model';
+import { Body, Controller, Delete, Get, Param, Patch, Post } from '@nestjs/common';
+import { Task, TaskStatus } from './task.model';
 import { CreateTaskDto } from './dto/create-task.dto';
 import { TasksService } from './tasks.service';
 
@@ -28,5 +28,14 @@ export class TasksController {
     deleteTaskById(@Param('id') id: string): Task[] {
         const tasks: Task[] = this.tasksService.deleteTaskById(id)
         return tasks
+    }
+
+    @Patch(':id/status')
+    updateTaskStatus(
+        @Param('id') id: string,
+        @Body('status') status: TaskStatus
+    ): Task {
+        const task: Task = this.tasksService.updateTaskStatus(id, status)
+        return task
     }
 }
