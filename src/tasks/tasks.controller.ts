@@ -15,6 +15,7 @@ import { stringify } from 'querystring';
 @UseGuards(AuthGuard())
 export class TasksController {
     private logger = new Logger(`TasksController`)
+    
     constructor(private tasksService: TasksService) {}
 
     @Get()
